@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #fef2f2;
+  --color-primary-100: #fee2e2;
+  --color-primary-200: #fecaca;
+  --color-primary-300: #fca5a5;
+  --color-primary-400: #f87171;
+  --color-primary-500: #ef4444;
+  --color-primary-600: #dc2626;
+  --color-primary-700: #b91c1c;
+  --color-primary-800: #991b1b;
+  --color-primary-900: #7f1d1d;
+
+  --color-surface-50: #f8fafc;
+  --color-surface-100: #f1f5f9;
+  --color-surface-200: #e2e8f0;
+  --color-surface-300: #cbd5e1;
+  --color-surface-400: #94a3b8;
+  --color-surface-500: #64748b;
+  --color-surface-600: #475569;
+  --color-surface-700: #334155;
+  --color-surface-800: #1e293b;
+  --color-surface-900: #0f172a;
+  --color-surface-950: #020617;
+
+  --color-accent-400: #fb7185;
+  --color-accent-500: #f43f5e;
+
+  --color-success-400: #4ade80;
+  --color-success-500: #22c55e;
+
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+
+  --color-danger-400: #f87171;
+  --color-danger-500: #ef4444;
+
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-surface-50 text-surface-900 font-sans antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(239, 68, 68, 0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(244, 63, 94, 0.05), transparent);
+    min-height: 100vh;
+  }
+
+  * {
+    @apply box-border;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-surface-200/60 shadow-sm;
+  }
+
+  .glass-light {
+    @apply bg-white/50 backdrop-blur-md border border-surface-200/40 shadow-sm;
+  }
+
+  .btn-primary {
+    @apply px-5 py-2.5 rounded-xl font-semibold text-sm
+      bg-gradient-to-r from-primary-600 to-primary-500
+      text-white shadow-lg shadow-primary-600/25
+      hover:shadow-xl hover:shadow-primary-600/35
+      hover:from-primary-500 hover:to-primary-400
+      active:scale-[0.98]
+      transition-all duration-200 ease-out
+      cursor-pointer;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 rounded-xl font-medium text-sm
+      text-surface-600 hover:text-surface-900
+      hover:bg-surface-200/50
+      active:scale-[0.98]
+      transition-all duration-200 ease-out
+      cursor-pointer;
+  }
+
+  .badge {
+    @apply px-2.5 py-0.5 rounded-full text-xs font-semibold tracking-wide;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out both;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out both;
+  }
+
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.15); }
+  50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.3); }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-surface-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-surface-400;
+}
