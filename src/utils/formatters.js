@@ -13,6 +13,36 @@ function formatOutputDate(val) {
 }
 
 /**
+ * Strip line breaks from a cell value so copy-pasting into a spreadsheet
+ * (tab/newline separated) never misaligns rows because of embedded \n or \r.
+ */
+function sanitizeCell(val) {
+  if (val === undefined || val === null) return '';
+  return String(val).replace(/[\r\n]+/g, ' ').trim();
+}
+
+/**
+ * Map of Created By ID -> display name.
+ * Add/edit entries here as needed.
+ */
+const CREATOR_ID_MAP = {
+  '261093': 'REZZY YUHAND PRAMUDITA',
+  '240952': 'FITRIAN ADHICAHYA',
+  '250814': 'ILHAM PANJI LAKSMANA',
+  // add more ID: 'Name' pairs here
+};
+
+/**
+ * Resolve a Created By ID to a display name.
+ * Falls back to the raw ID itself if it isn't in the map.
+ */
+function resolveCreatorName(id) {
+  if (id === undefined || id === null || id === '') return '';
+  const key = String(id).trim();
+  return sanitizeCell(CREATOR_ID_MAP[key] || key);
+}
+
+/**
  * Format rows into the DMR table structure.
  * Columns: Tgl, request by, Description, Pn, Sn, Qty, Category, Used For, [empty], [empty], Ref WO, WO Status, Supplied By
  */
@@ -20,18 +50,18 @@ export function toDMR(rows, columnMap) {
   const m = columnMap;
   return rows.map((row) => [
     formatOutputDate(row[m.timestamp]),
-    row[m.requestor] || '',
-    row[m.description] || '',
-    row[m.partNumber] || '',
-    row[m.serialNumber] || '',
-    row[m.quantity] || '',
-    row[m.category] || '',
-    row[m.usedFor] || '',
+    sanitizeCell(row[m.requestor]),
+    sanitizeCell(row[m.description]),
+    sanitizeCell(row[m.partNumber]),
+    sanitizeCell(row[m.serialNumber]),
+    sanitizeCell(row[m.quantity]),
+    sanitizeCell(row[m.category]),
+    sanitizeCell(row[m.usedFor]),
     '', // Kosong
     '', // Kosong
-    row[m.refWO] || '',
+    sanitizeCell(row[m.refWO]),
     'OPEN', // WO STATUS
-    row[m.receiverShipper] || '',
+    resolveCreatorName(row[m.receiverShipper]),
   ]);
 }
 
@@ -48,19 +78,19 @@ export function toShipping(rows, columnMap) {
   const m = columnMap;
   return rows.map((row) => [
     formatOutputDate(row[m.timestamp]),
-    row[m.sourceLocation] || '',
-    row[m.destination] || '',
-    row[m.description] || '',
-    row[m.partNumber] || '',
-    row[m.serialNumber] || '',
-    row[m.quantity] || '',
+    sanitizeCell(row[m.sourceLocation]),
+    sanitizeCell(row[m.destination]),
+    sanitizeCell(row[m.description]),
+    sanitizeCell(row[m.partNumber]),
+    sanitizeCell(row[m.serialNumber]),
+    sanitizeCell(row[m.quantity]),
     '', // Kosong
-    row[m.category] || '',
+    sanitizeCell(row[m.category]),
     '', // Kosong
-    row[m.toTrax] || '',
+    sanitizeCell(row[m.toTrax]),
     'OPEN', // STATUS
     '', // Kosong
-    row[m.receiverShipper] || '',
+    resolveCreatorName(row[m.receiverShipper]),
   ]);
 }
 
@@ -79,18 +109,18 @@ export function toReceiving(rows, columnMap) {
     formatOutputDate(row[m.timestamp]),
     '', // Kosong
     'K1', // Destination
-    row[m.description] || '',
-    row[m.partNumber] || '',
-    row[m.serialNumber] || '',
-    row[m.bin] || '',
-    row[m.quantity] || '',
+    sanitizeCell(row[m.description]),
+    sanitizeCell(row[m.partNumber]),
+    sanitizeCell(row[m.serialNumber]),
+    sanitizeCell(row[m.bin]),
+    sanitizeCell(row[m.quantity]),
     '', // Kosong
-    row[m.category] || '',
+    sanitizeCell(row[m.category]),
     '', // Kosong
-    row[m.toTrax] || '',
+    sanitizeCell(row[m.toTrax]),
     'CLOSED', // STATUS
     '', // Kosong
-    row[m.receiverShipper] || '',
+    resolveCreatorName(row[m.receiverShipper]),
   ]);
 }
 

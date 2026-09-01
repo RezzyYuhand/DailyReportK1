@@ -134,10 +134,15 @@ export default function App() {
 
     for (const row of visibleRows) {
       const type = String(row[typeCol] || '').toUpperCase().trim();
-      if (type === 'ISSUED' && type !== 'RTS/WO') dmr.push(row);
-      else if (type === 'TO/CREATE' || type === 'TP/CREATE') shipping.push(row);
-      else if (type === 'TO/RECEIVING' || type === 'TP/RECEIVING') receiving.push(row);
-      else { dmr.push(row); shipping.push(row); receiving.push(row); }
+      if (type === 'ISSUED') {
+        dmr.push(row);
+      } else if (type === 'TO/CREATE' || type === 'TP/CREATE') {
+        shipping.push(row);
+      } else if (type === 'TO/RECEIVING' || type === 'TP/RECEIVING') {
+        receiving.push(row);
+      }
+      // Anything else (e.g. RTS/WO) is intentionally excluded from DMR/Shipping/Receiving —
+      // it still remains visible in the "All Data" tab via visibleRows.
     }
 
     return { all_raw: visibleRows, dmr, shipping, receiving };
@@ -153,7 +158,7 @@ export default function App() {
           rawData.headers.map((h) => {
             const val = row[h];
             if (val instanceof Date) return val.toISOString();
-            return String(val ?? '');
+            return String(val ?? '').replace(/[\r\n]+/g, ' ').trim();
           })
         );
       case 'dmr':
